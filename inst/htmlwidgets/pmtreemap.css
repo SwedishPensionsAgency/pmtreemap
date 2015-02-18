@@ -1,0 +1,165 @@
+/*td.details-control
+{
+    background: url('details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+
+tr.shown td.details-control
+{
+    background: url('details_close.png') no-repeat center center;
+}
+
+.treemap
+{
+    width: 600px;
+    height: 600px;
+}
+
+
+.d3treelazy rect
+{
+    fill: none;
+    stroke: black;
+}*/
+
+/***************** PMTreeMapD3 **************************/
+.PmTreeMapD3 svg, PmTreeMapD3 .chart
+{
+    overflow: hidden;
+}
+
+.PmTreeMapD3 .bredcrum
+{
+    width: 100%;
+    height: 20px;
+}
+
+.PmTreeMapD3 .pm-tooltip
+{
+     display: none; 
+    /* position: absolute; */
+    position: absolute;
+    padding: 10px;
+    background: white;
+    border-radius: 3px;
+    pointer-events: none;
+    width: 200px;
+    box-shadow: 0px 0px 5px #888;
+    text-align: center;
+    opacity: 0.85;
+}
+
+.PmTreeMapD3 rect
+{
+    opacity: 0.0;
+    fill: inherit;
+    cursor: pointer;
+    /* transition: opacity 1s; */
+}
+
+.PmTreeMapD3 g.zoomed.cell > g.cell:not(.zoomed) > g.cell > rect, .PmTreeMapD3 g.zoomed.cell > g.leaf.cell > rect
+{
+    /*fill: inherit;*/
+    cursor: pointer;
+    opacity: 0.85;
+    /* transition: opacity 1s; */
+    /*transition: fill 1s;*/
+}
+
+/*.PmTreeMapD3 g.zoomed.cell.active > g.cell:not(.zoomed) > g.cell > rect*/
+.PmTreeMapD3 g.cell.active > g.cell:not(.zoomed) > rect, .PmTreeMapD3 g.zoomed.cell > g.active.leaf.cell > rect
+{
+    opacity: 1 !important;
+}
+
+.PmTreeMapD3 g.zoomed.cell > g.cell > rect
+{
+    /*fill: inherit;*/
+    cursor: pointer;
+    /*transition: fill 1s;*/
+    /* opacity: 1; */
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_1
+{
+    fill: rgb(255,183,15);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_2
+{
+    fill: rgb(239,130,0);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_3
+{
+    fill: rgb(227, 73, 18);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_4
+{
+    fill: rgb(172, 26, 47);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_5
+{
+    fill: rgb(196, 38, 149);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_6
+{
+    fill: rgb(94, 176, 230);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_7
+{
+    fill: rgb(18, 86, 135);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_8
+{
+    fill: rgb(175, 165, 0);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_9
+{
+    fill: rgb(84, 95, 29);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .zoomed > g.cell.order_10
+{
+    fill: rgb(185, 177, 169);
+    transition: fill 1s;
+}
+
+.PmTreeMapD3 .node-label
+{
+    font-size: 13px;
+    /*fill: #464646;*/
+    fill: #464646;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 100;
+    position: relative;
+}
+
+.PmTreeMapD3 .active > .node-label
+{
+    fill: #f0f0f0;
+    text-shadow: 0px 1px 2px #444444;
+    /*transition: fill 0.5s, text-shadow 0.5s;*/
+}
+
+.PmTreeMapD3 .zoomed > g.cell:not(.zoomed) > .node-label
+{
+    /*display: inline;*/
+    opacity: 1;
+}
