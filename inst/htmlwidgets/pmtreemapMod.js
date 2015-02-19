@@ -51,8 +51,8 @@
                 .attr("width", self.width)
                 .attr("height", self.height)
                 .append("svg:g")
-                //.attr("transform", "translate(.5,.5) scale(0.25,0.25)")
-                .attr("transform", "translate(.5,.5) scale(1,1)")
+                .attr("transform", "translate(.5,.5) scale(0.25,0.25)")
+                //.attr("transform", "translate(.5,.5) scale(1,1)")
                 .attr('class', 'zoomed cell');
 
             // Set up the tooltip and insert the HTML-element
@@ -527,6 +527,38 @@
         /*
         * Calculates translate property of a cell and returns it as a string.
         */
+        //self.getTranslateString = function (node, zoomNode) {
+        //    self.xScale.domain([zoomNode.x, zoomNode.x + zoomNode.dx]);
+        //    self.yScale.domain([zoomNode.y, zoomNode.y + zoomNode.dy]);
+        //    var kx = self.width / zoomNode.dx, ky = self.height / zoomNode.dy, x = self.xScale, y = self.yScale;
+        //    var trans = "";
+
+        //    //If the node is below the level of the zoomNode
+        //    if (node.depth < zoomNode.depth) {
+        //        var scale = self.getScale(node.parent, zoomNode);
+        //        var transX = Math.round(x(node.x) / scale.scaleX - x(node.parent.x) / scale.scaleX);
+        //        var transY = Math.round(y(node.y) / scale.scaleY - y(node.parent.y) / scale.scaleY);
+        //        trans = "translate(" + transX + "," + transY + ")";
+
+        //    }
+        //        //If the node is at the same level as the zoomNode
+        //    else if (node.depth == zoomNode.depth) {
+        //        var scale = self.getScale(node.parent, zoomNode);
+        //        var offsetX = Math.round(x(zoomNode.parent.x));
+        //        var offsetY = Math.round(y(zoomNode.parent.y));
+        //        var transX = Math.round((x(node.x) - x(node.parent.x) + offsetX) / scale.scaleX);
+        //        var transY = Math.round((y(node.y) - y(node.parent.y) + offsetY) / scale.scaleY);
+        //        trans = "translate(" + transX + "," + transY + ")";
+        //    }
+        //        //If the node is above the level of the zoomNode
+        //    else {
+        //        var transX = Math.round(node.x - node.parent.x);
+        //        var transY = Math.round(node.y - node.parent.y);
+        //        trans = "translate(" + transX + "," + transY + ")";
+
+        //    }
+        //    return trans;
+        //}
         self.getTranslateString = function (node, zoomNode) {
             self.xScale.domain([zoomNode.x, zoomNode.x + zoomNode.dx]);
             self.yScale.domain([zoomNode.y, zoomNode.y + zoomNode.dy]);
@@ -557,12 +589,42 @@
                 trans = "translate(" + transX + "," + transY + ")";
 
             }
+
+            var scale = self.getScale(node.parent, zoomNode);
+            var transX = Math.round(node.x - node.parent.x);
+            var transY = Math.round(node.y - node.parent.y);
+
+            console.log("Node: " + node.name + ", transX = " + transX + ", transY = " + transY + ", scaleX = " + scale.scaleX + ", scaleY = " + scale.scaleY);
+            trans = "translate(" + transX + "," + transY + ")";
             return trans;
         }
 
         /*
         * Calculates scale property values of a cell and returns it as an object.
         */
+        //self.getScale = function (node, zoomNode) {
+        //    var a = "";
+        //    var scale = "";
+        //    var depth = node.depth;
+        //    var zoomParent = zoomNode
+        //    var scaleX = 1;
+        //    var scaleY = 1;
+
+        //    if (node.depth <= zoomNode.depth && node.depth > 0) {
+        //        for (var i = zoomNode.depth; i > node.depth; i--) {
+        //            zoomParent = zoomParent.parent;
+        //            var b = "";
+        //        }
+
+        //        var scaleX = zoomParent.parent.dx / zoomParent.dx;
+        //        var scaleY = zoomParent.parent.dy / zoomParent.dy;
+        //        scale = ", scale(" + scaleX + "," + scaleY + ")";
+        //    }
+
+        //    return { scaleX: scaleX, scaleY: scaleY };
+
+        //}
+
         self.getScale = function (node, zoomNode) {
             var a = "";
             var scale = "";
@@ -571,14 +633,17 @@
             var scaleX = 1;
             var scaleY = 1;
 
-            if (node.depth <= zoomNode.depth && node.depth > 0) {
-                for (var i = zoomNode.depth; i > node.depth; i--) {
+            if (node.depth === 1) {
+                while(zoomParent.depth > 0) {
                     zoomParent = zoomParent.parent;
                     var b = "";
                 }
 
-                var scaleX = zoomParent.parent.dx / zoomParent.dx;
-                var scaleY = zoomParent.parent.dy / zoomParent.dy;
+                var scaleX = zoomParent.dx / zoomNode.dx;
+                var scaleY = zoomParent.dy / zoomNode.dy;
+
+                //console.log("Node: " + node.name + ", scaleX = " + scaleX + ", scaleY = " + scaleY + ", zoomParent = " + zoomParent.name + ", zoomNode = " + zoomNode.name);
+
                 scale = ", scale(" + scaleX + "," + scaleY + ")";
             }
 

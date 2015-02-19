@@ -47,7 +47,20 @@ data(diamonds)
     "size": 2,
     "name": "NodeA21",
     "isLeaf": false,
+    "children": [
+  {
+    "size": 1,
+    "name": "NodeA211",
+    "isLeaf": false,
     "children": []
+  },
+  {
+    "size": 1,
+    "name": "NodeA212",
+    "isLeaf": false,
+    "children": []
+  }
+]
   },
   {
     "size": 1,

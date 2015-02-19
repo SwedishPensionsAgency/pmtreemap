@@ -18,7 +18,7 @@ shinyUI(fluidPage(
     ),
     mainPanel(
       tabsetPanel(
-        tabPanel("D3 Treemap", treemapOutput("tree"))
+        tabPanel("D3 Treemap", treemapOutput("tree", width = "600px", height="600px"))
       )
     )
   )
