@@ -49,6 +49,13 @@ tr.shown td.details-control
     opacity: 0.85;
 }
 
+
+.PmTreeMapD3 g.cell
+{
+    stroke: white;
+    stroke-width: 0.5px;
+}
+
 .PmTreeMapD3 rect
 {
     opacity: 0.0;
@@ -143,12 +150,12 @@ tr.shown td.details-control
 .PmTreeMapD3 .node-label
 {
     font-size: 13px;
-    /*fill: #464646;*/
     fill: #464646;
     pointer-events: none;
     opacity: 0;
     z-index: 100;
     position: relative;
+    stroke-width: 0px;
 }
 
 .PmTreeMapD3 .active > .node-label
