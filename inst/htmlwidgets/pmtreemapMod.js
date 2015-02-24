@@ -137,6 +137,11 @@
                 if (typeof node.label === "undefined") {
                     node.label = node.name;
                 }
+
+                //Fix the name
+                node.name = self.replaceAll(" ", "", node.name);
+
+
                 //Set the isLeafStatus
                 node.isLeaf = false;
                 if (typeof node.children === "undefined" || node.children.length === 0) {
@@ -639,6 +644,26 @@
             .style("left", x - 100 + "px")
             .style("top", y - 120 + "px");
         }
+
+
+        /*
+        * Replaces all occurences of a string in another string. Find can be a string or an array of strings.
+        */
+        self.replaceAll = function (find, replace, str) {
+            var reg;
+            if (Array.isArray(find)) {
+                find.forEach(function (v) {
+                    reg = v.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                    str.replace(new RegExp(reg, 'g'), replace);
+                });
+            }
+            else {
+                reg = find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+                str.replace(new RegExp(find, 'g'), replace);
+            }
+            return str;
+        };
+
 
     };
 
