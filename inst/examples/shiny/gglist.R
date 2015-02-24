@@ -28,7 +28,7 @@ for (i in unique(gglist$cut)) {
   
   size = unbox(data_1$n_g4[[1]])
   label = unbox(as.character(unique(data_1$cut)[[1]]))
-  name = (data_1 %>% mutate(name = paste(cut, sep="_")))$name[[1]]
+  name = unbox((data_1 %>% mutate(name = paste(cut, sep="_")))$name[[1]])
   
   newNode_1 <- list(size = size, name = name, label = label, children = list())
   for (j in unique(data_1$color)) {
@@ -36,7 +36,7 @@ for (i in unique(gglist$cut)) {
     
     size = unbox(data_2$n_g3[[1]])
     label = unbox(as.character(unique(data_2$color)[[1]]))
-    name = (data_2 %>% mutate(name = paste(cut,color, sep="_")))$name[[1]]
+    name = unbox((data_2 %>% mutate(name = paste(cut,color, sep="_")))$name[[1]])
     
     newNode_2 <- list(size = size, name = name, label = label, children = list())
     for (k in unique(data_2$clarity)) {
@@ -44,7 +44,7 @@ for (i in unique(gglist$cut)) {
       
       size = unbox(data_3$n_g2[[1]])
       label = unbox(as.character(unique(data_3$clarity)[[1]]))
-      name = (data_3 %>% mutate(name = paste(cut,color,clarity, sep="_")))$name[[1]]
+      name = unbox((data_3 %>% mutate(name = paste(cut,color,clarity, sep="_")))$name[[1]])
       
       newNode_3 <- list(size = size, name = name, label = label, children = list())
       for (l in unique(data_3$table)) {
@@ -52,7 +52,7 @@ for (i in unique(gglist$cut)) {
         
         size = unbox(data_4$n_g1[[1]])
         label = unbox(as.character(unique(data_4$table)[[1]]))
-        name = (data_4 %>% mutate(name = paste(cut,color,clarity,table, sep="_")))$name[[1]]
+        name = unbox((data_4 %>% mutate(name = paste(cut,color,clarity,table, sep="_")))$name[[1]])
         
         newNode_4 <- list(size = size, name = name, label = label, children = list())
         newNode_3[['children']] <- append(newNode_3[['children']], list(newNode_4))

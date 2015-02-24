@@ -139,7 +139,7 @@
                 }
 
                 //Fix the name
-                node.name = self.replaceAll(" ", "", node.name);
+                node.name = self.replaceAll(" ", "_", node.name);
 
 
                 //Set the isLeafStatus
@@ -207,8 +207,8 @@
                 .attr("transform", function (d) {
                     return "translate(" + d.x + "," + d.y + ")";
                 })
-                .attr("data-type", function (d) { return d.name; })
-                .attr("data-value", function (d) { return d.value; })
+                //.attr("data-type", function (d) { return d.name; })
+                //.attr("data-value", function (d) { return d.value; })
                 .on("click", function (d) {
                     // Since this is the top leve, do nothing.
                     if (d3.event.ctrlKey) {
@@ -268,8 +268,11 @@
                         return "translate(" + x + "," + y + ")";
                     }
                 })
-                .attr("data-type", function (d) { return d.name; })
-                .attr("data-value", function (d) { return d.value; })
+                .attr("stroke", "white")
+                .attr("stroke-width", "0.5")
+                .attr("vector-effect", "non-scaling-stroke");
+                //.attr("data-type", function (d) { return d.name; })
+                //.attr("data-value", function (d) { return d.value; })
             // Append rect elements to the cells
             cell.append("svg:rect")
                 .attr("width", function (d) { return Math.round(d.dx); })
@@ -299,11 +302,16 @@
             .attr("transform", function (d) {
                 return "translate(" + Math.round(d.x) + "," + Math.round(d.y) + ")";
             })
-            .attr("data-type", function (d) {
-                return d.name;
-            })
-            .attr("data-value", function (d) {
-                return d.value;
+            //.attr("data-type", function (d) {
+            //    return d.name;
+            //})
+            //.attr("data-value", function (d) {
+            //    return d.value;
+            //})
+            .attr("stroke", "white")
+            .attr("stroke-width", function (d) {
+                //!!! TODO !!! Fixa stroke width, beroende av scalen. Går det sätta stroke x och y?
+                return "0.1"; 
             });
 
             // Append rect elements to the cells
@@ -329,7 +337,7 @@
         self.defineCellText = function (cell) {
             var cellText = cell.append("svg:text")
                 .attr('class', 'node-label')
-                .text(function (d) { return d.name; })
+                .text(function (d) { return d.label; })
                 .attr("transform", function (d) {
                     //var trans = "translate(" + d.dx / 2 + "," + d.dy / 2 + ") scale(1,1)";
                     var box = d3.select(this)[0][0].getBBox();
@@ -483,7 +491,7 @@
             .append("span")
             .text(function (d) {
                 var a = "";
-                return d.name;
+                return d.label;
             })
             .attr('class', 'bredcrum-node')
             .on("click", function (d, arg) {
@@ -519,7 +527,7 @@
                 var transX = Math.round((node.dx - box.width * scale.scaleX) / 2);
                 var transY = Math.round((node.dy - box.height * scale.scaleY) / 2);
 
-                console.log("Node-label: " + node.name + ", transX = " + transX + ", transY = " + transY + ", scaleX = " + scale.scaleX + ", scaleY = " + scale.scaleY);
+                //console.log("Node-label: " + node.name + ", transX = " + transX + ", transY = " + transY + ", scaleX = " + scale.scaleX + ", scaleY = " + scale.scaleY);
 
                 trans = "translate(" + transX + "," + transY + ")";
             }
@@ -653,13 +661,11 @@
             var reg;
             if (Array.isArray(find)) {
                 find.forEach(function (v) {
-                    reg = v.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                    str.replace(new RegExp(reg, 'g'), replace);
+                    str = str.split(v).join(replace);
                 });
             }
             else {
-                reg = find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-                str.replace(new RegExp(find, 'g'), replace);
+                str = str.split(find).join(replace);
             }
             return str;
         };
