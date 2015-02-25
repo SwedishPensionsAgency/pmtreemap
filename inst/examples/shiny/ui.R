@@ -4,12 +4,12 @@ library(pmwidgets)
 
 shinyUI(fluidPage(
   
-  singleton(
-    tags$head(
-      tags$script(src = "htmlwidgets/pmtreemapMod.js"),
-      tags$link(rel = "stylesheet", type = "text/css", href = "htmlwidgets/pmtreemap.css")
-    )
-  ),
+  #singleton(
+  #  tags$head(
+      #tags$script(src = "htmlwidgets/pmtreemapMod.js"),
+      #tags$link(rel = "stylesheet", type = "text/css", href = "htmlwidgets/pmtreemap.css")
+  #  )
+  #),
   
   titlePanel("Shiny treemapD3"),
   
