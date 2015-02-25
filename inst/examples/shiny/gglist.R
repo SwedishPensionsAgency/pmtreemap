@@ -2,7 +2,8 @@ library("ggplot2")
 library("jsonlite")
 library("dplyr")
 
-base_data <- diamonds[sample(1:nrow(diamonds), 4000),]
+base_data <- diamonds[sample(1:nrow(diamonds), 53940),]
+#base_data <- diamonds[sample(1:nrow(diamonds), 100),]
 
 ## Gruppera data
 gglist <- base_data %>% 

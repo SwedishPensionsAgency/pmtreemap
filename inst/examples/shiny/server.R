@@ -2,7 +2,6 @@ library(shiny)
 library(widgets)
 library(htmlwidgets)
 library(ggplot2)
-library(htmlwidgets)
 # data(diamonds)  
 
 source("gglist.R")

@@ -1,5 +1,6 @@
 library(shiny)
 library(widgets)
+library(pmwidgets)
 
 shinyUI(fluidPage(
   

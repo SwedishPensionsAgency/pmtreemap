@@ -26,6 +26,13 @@
             self.treedata = self.setTreeDataPropertiesRecurse(treedata);
             self.treedata.isZoomed = true;
 
+            self.sortRecurse(treedata);
+            self.root = treedata;
+
+            // For debug
+            // window.PmTreeDataRoot = self.root;
+            // For debug
+
 
             // Set up the d3-treemap object
             self.treemap = d3.layout.treemap()
@@ -33,10 +40,14 @@
                 .padding(0)
                 .round(true)
                 .size([self.width, self.height])
-                .value(function (d) { return d.size; })
-                .sort(function (a, b) {
-                    return a.value - b.value;
-                });
+                .value(function (d) {
+                    return d.size;
+                })
+                .sort(self.sortComparator);
+                //.sort(function (a, b) {
+                //    return a.value - b.value;
+                //    //return a.area - b.area;
+                //});
 
             // Set up the bredcrum and insert the HTML-element
             self.bredcrum = d3.select(el).insert("div", '.chart');
@@ -63,7 +74,7 @@
 
 
             // Render the treemap and bredcrum
-            self.render(treedata);
+            self.render();
             self.updateBredCrum();
 
         };
@@ -77,10 +88,7 @@
         /*
         * Render the tree map
         */
-        self.render = function (data) {
-            self.root = data;
-            self.setOrderRecurse(self.root);
-
+        self.render = function () {
             var nodes = self.treemap.nodes(self.root).filter(function (d) {
                 return true;
             });
@@ -90,7 +98,7 @@
             var cellText = self.defineCellText(topCell);
             var cellText = self.defineCellText(cell);
 
-            self.zoomTraceNode.push(data);
+            self.zoomTraceNode.push(self.root);
 
         }
 
@@ -139,7 +147,7 @@
                 }
 
                 //Fix the name
-                node.name = self.replaceAll(" ", "_", node.name);
+                node.name = self.replaceAll([" ", ".", ","], "_", node.name);
 
 
                 //Set the isLeafStatus
@@ -164,11 +172,27 @@
         * Updates the tree data with sort order property
         * Calls itself recusivly
         */
-        self.setOrderRecurse = function (data) {
+        self.sortRecurse = function (data) {
+
+            //data.children.sort(function (a, b) {
+            //    return a.size - b.size;
+            //});
+
+            data.children.sort(self.sortComparator);
+
+
             for (var i = 0; i < data.children.length; i++) {
                 data.children[i].order = i + 1;
-                self.setOrderRecurse(data.children[i]);
+                self.sortRecurse(data.children[i]);
             };
+        }
+
+        /*
+        * Updates the tree data with sort order property
+        * Calls itself recusivly
+        */
+        self.sortComparator = function (a, b) {
+            return a.size - b.size !== 0 ? a.size - b.size : a.name.localeCompare(b.name);
         }
 
         /*
@@ -199,7 +223,7 @@
                 .enter().append("svg:g")
                 .attr('class', function (d) {
                     //return "topCell order_" + d.order;
-                    return "cell order_" + d.order;
+                    return "cell " + self.getOrderClass(d);
                 })
                 .attr('id', function (d) {
                     return d.name;
@@ -235,7 +259,7 @@
                 .attr("width", function (d) { return Math.round(d.dx); })
                 .attr("height", function (d) { return Math.round(d.dy); })
                 .attr('class', function (d) {
-                    return "order_" + d.order;
+                    return self.getOrderClass(d);
                 });
 
             return cells;
@@ -253,7 +277,7 @@
                 })
                 .enter().append('svg:g')
                 .attr('class', function (d) {
-                    return "cell order_" + d.order;
+                    return "cell " + self.getOrderClass(d);
                 })
                 .attr('id', function (d) {
                     return d.name;
@@ -271,14 +295,14 @@
                 .attr("stroke", "white")
                 .attr("stroke-width", "0.5")
                 .attr("vector-effect", "non-scaling-stroke");
-                //.attr("data-type", function (d) { return d.name; })
-                //.attr("data-value", function (d) { return d.value; })
+            //.attr("data-type", function (d) { return d.name; })
+            //.attr("data-value", function (d) { return d.value; })
             // Append rect elements to the cells
             cell.append("svg:rect")
                 .attr("width", function (d) { return Math.round(d.dx); })
                 .attr("height", function (d) { return Math.round(d.dy); })
                 .attr('class', function (d) {
-                    return "order_" + d.order;
+                    return self.getOrderClass(d);
                 });
 
             return cell;
@@ -294,7 +318,7 @@
 
             .enter().insert('svg:g', "text")
             .attr('class', function (d) {
-                return "cell order_" + d.order;
+                return "cell " + self.getOrderClass(d);
             })
             .attr('id', function (d) {
                 return d.name;
@@ -310,8 +334,8 @@
             //})
             .attr("stroke", "white")
             .attr("stroke-width", function (d) {
-                //!!! TODO !!! Fixa stroke width, beroende av scalen. Går det sätta stroke x och y?
-                return "0.1"; 
+                var stroke = d.parent.parent.area / self.root.area;
+                return stroke;
             });
 
             // Append rect elements to the cells
@@ -325,7 +349,7 @@
                 })
                 .attr('class', function (d) {
                     //console.log("append rect to: " + d.name);
-                    return "order_" + d.order;
+                    return self.getOrderClass(d);
                 });
 
             return cells;
@@ -436,7 +460,7 @@
                     if (d.isLeaf) {
                         cssClass = cssClass + " leaf";
                     }
-                    cssClass = cssClass + " order_" + d.order;
+                    cssClass = cssClass + " " + self.getOrderClass(d);
                 }
                 return cssClass;
             });
@@ -546,7 +570,7 @@
         self.getTranslateString = function (node, zoomNode) {
             self.xScale.domain([zoomNode.x, zoomNode.x + zoomNode.dx]);
             self.yScale.domain([zoomNode.y, zoomNode.y + zoomNode.dy]);
-            var kx = self.width / zoomNode.dx, ky = self.height / zoomNode.dy, x = self.xScale, y = self.yScale, transX, transY;
+            var kx = self.width / zoomNode.dx, ky = self.height / zoomNode.dy, x = self.xScale, y = self.yScale, transX, transY, scale = { scaleX: 1, scaleY: 1 };
             var trans = "";
 
             //If the node is in the top level
@@ -564,7 +588,11 @@
                 trans = "translate(" + transX + "," + transY + ")";
             }
 
-            //console.log("Node: " + node.name + ", transX = " + transX + ", transY = " + transY + ", scaleX = " + scale.scaleX + ", scaleY = " + scale.scaleY);
+            //if (node.name === "Ideal_G_VS1_53_5") {
+            //    //if (node.parent.name === "Ideal_G_VS1") {
+
+            //    console.log("Node: " + node.name + ", transX = " + transX + ", transY = " + transY + ", scaleX = " + scale.scaleX + ", scaleY = " + scale.scaleY);
+            //}
 
             return trans;
         }
@@ -668,6 +696,26 @@
                 str = str.split(find).join(replace);
             }
             return str;
+        };
+
+        /*
+        * Returns the order class name.
+        */
+        self.getOrderClass = function (node) {
+            var order, parentOrder = 1, orderOffset;
+            if (typeof node.parent !== "undefined" && typeof node.parent.parent !== "undefined") {
+                parentOrder = (node.parent.parent.children.length - node.parent.order) + 1;
+                parentOrder = parentOrder % 10;
+            }
+
+            order = (node.parent.children.length - node.order);
+            order = order % 10 + 1;
+            orderOffset = ((parentOrder - 1) + (order - 1)) % 10 + 1;
+
+            //console.log("getOrderClass(): parentOrder = " + parentOrder + ", order = " + order + ", orderOffset = " + orderOffset + ", node = " + node.name);
+
+            //order = node.order;
+            return "order_" + order;
         };
 
 
