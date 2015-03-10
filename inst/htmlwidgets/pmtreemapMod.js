@@ -173,14 +173,7 @@
         * Calls itself recusivly
         */
         self.sortRecurse = function (data) {
-
-            //data.children.sort(function (a, b) {
-            //    return a.size - b.size;
-            //});
-
             data.children.sort(self.sortComparator);
-
-
             for (var i = 0; i < data.children.length; i++) {
                 data.children[i].order = i + 1;
                 self.sortRecurse(data.children[i]);
@@ -234,7 +227,7 @@
                 //.attr("data-type", function (d) { return d.name; })
                 //.attr("data-value", function (d) { return d.value; })
                 .on("click", function (d) {
-                    // Since this is the top leve, do nothing.
+                    // Since this is the top level, do nothing.
                     if (d3.event.ctrlKey) {
                         //return self.zoomOut(d);
                     }
@@ -587,12 +580,6 @@
                 transY = Math.round(node.y - node.parent.y);
                 trans = "translate(" + transX + "," + transY + ")";
             }
-
-            //if (node.name === "Ideal_G_VS1_53_5") {
-            //    //if (node.parent.name === "Ideal_G_VS1") {
-
-            //    console.log("Node: " + node.name + ", transX = " + transX + ", transY = " + transY + ", scaleX = " + scale.scaleX + ", scaleY = " + scale.scaleY);
-            //}
 
             return trans;
         }
