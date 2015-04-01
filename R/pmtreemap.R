@@ -32,7 +32,7 @@ treemap <- function(data, width = NULL, height = NULL) {
 treemapOutput <- function(outputId, width = '600px', height = '600px'){
 #treemapOutput <- function(outputId, width, height){
   print(paste("treemapOutput, ","width = ",width))
-  shinyWidgetOutput(outputId, 'pmtreemap', width = width, height = height, package = 'pmwidgets')
+  shinyWidgetOutput(outputId, 'pmtreemap', width = width, height = height, package = 'pmtreemap')
   #shinyWidgetOutput(outputId, 'treemap', width, height)
 }
 

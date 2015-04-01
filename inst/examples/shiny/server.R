@@ -1,5 +1,5 @@
 library(shiny)
-library(widgets)
+#library(widgets)
 library(htmlwidgets)
 library(ggplot2)
 # data(diamonds)  
@@ -192,7 +192,7 @@ shinyServer(function(input, output) {
   #print("shinyServer")
   
   
-  addResourcePath('htmlwidgets', "C:/dev/stash/Packages/pmwidgets/inst/htmlwidgets")
+  #addResourcePath('htmlwidgets', "C:/dev/stash/Packages/pmtreemap/inst/htmlwidgets")
   
   
   data <- returnJson
